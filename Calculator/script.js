@@ -47,14 +47,23 @@ function reset() {
 }
 
 function updateNumbers(event) {
+    const input = event.target.textContent;
     if (operator) {
-        if (event.target.textContent === "0" && !secondNumber) return;
-        secondNumber += event.target.textContent;
+        if (secondNumber === "0") {
+            if (input === "0") return;
+            secondNumber = input;
+        } else {
+        secondNumber += input;
+        }
         display.textContent = secondNumber;
     } else {
-        if (event.target.textContent === "0" && !firstNumber) return;
-        firstNumber += event.target.textContent;
-        display.textContent = firstNumber;
+       if (firstNumber === "0") {
+        if (input === "0") return;
+        firstNumber = input;
+        } else {
+        firstNumber += input;
+        }
+        display.textContent = firstNumber; 
     }
 }
 
@@ -69,17 +78,18 @@ function roundResult(result) {
 
 
 function updateOperators(event) {
+    const input = event.target.textContent;
     if (!firstNumber) {
         firstNumber = display.textContent;
-        operator = event.target.textContent
+        operator = input;
     }
     if (firstNumber && !secondNumber) {
-        operator = event.target.textContent;
+        operator = input;
         display.textContent = operator;
     } else if (firstNumber && operator && secondNumber) {
         let result = operate(+firstNumber, operator, +secondNumber);
         firstNumber = result;
-        operator = event.target.textContent;
+        operator = input;
         display.textContent = roundResult(result);
         secondNumber = "";
     }
@@ -149,3 +159,13 @@ function addDecimal() {
 }
 
 decimalBtn.addEventListener("click", addDecimal);
+
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+function handleKeyPress(event) {
+    if (numbers.includes(event.key)) {
+        updateNumbers(event);
+    }
+}
+
+window.addEventListener("keydown", handleKeyPress)
