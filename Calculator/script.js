@@ -98,7 +98,9 @@ function updateOperators(input) {
 }
 
 operatorBtns.forEach(op => {
-    op.addEventListener("click", updateOperators);
+    op.addEventListener("click", (e) => {
+        updateOperators(e.target.textContent);
+    });
 });
 
 function calculate() {
