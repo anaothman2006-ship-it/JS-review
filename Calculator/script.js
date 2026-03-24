@@ -1,5 +1,5 @@
-const digits = document.querySelectorAll(".number-btn");
-const operators = document.querySelectorAll(".operator-btn");
+const numberBtns = document.querySelectorAll(".number-btn");
+const operatorBtns = document.querySelectorAll(".operator-btn");
 const equalBtn = document.querySelector(".equal-btn");
 const decimalBtn = document.querySelector(".decimal-btn");
 const backSpaceBtn = document.querySelector(".back-space-btn");
@@ -46,8 +46,8 @@ function reset() {
     secondNumber = "";
 }
 
-function updateNumbers(event) {
-    const input = event.target.textContent;
+function updateNumbers(input) {
+    //const input = event.target.textContent;
     if (operator) {
         if (secondNumber === "0") {
             if (input === "0") return;
@@ -67,8 +67,10 @@ function updateNumbers(event) {
     }
 }
 
-digits.forEach(digit => {
-    digit.addEventListener("click", updateNumbers);
+numberBtns.forEach(digit => {
+    digit.addEventListener("click", (e) => {
+        updateNumbers(e.target.textContent);
+    });
 });
 
 
@@ -77,8 +79,8 @@ function roundResult(result) {
 }
 
 
-function updateOperators(event) {
-    const input = event.target.textContent;
+function updateOperators(input) {
+    //const input = event.target.textContent;
     if (!firstNumber) {
         firstNumber = display.textContent;
         operator = input;
@@ -95,7 +97,7 @@ function updateOperators(event) {
     }
 }
 
-operators.forEach(op => {
+operatorBtns.forEach(op => {
     op.addEventListener("click", updateOperators);
 });
 
@@ -160,12 +162,20 @@ function addDecimal() {
 
 decimalBtn.addEventListener("click", addDecimal);
 
-const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const operators = ["+", "-", "*", "/"];
 
-function handleKeyPress(event) {
-    if (numbers.includes(event.key)) {
-        updateNumbers(event);
-    }
-}
 
-window.addEventListener("keydown", handleKeyPress)
+window.addEventListener("keydown", (e) => {
+    const input = e.key;
+    if (numbers.includes(input)) {
+        updateNumbers(input);
+
+    } else if (operators.includes(input)) {
+        updateOperators(input);
+    } 
+    else if (input === "Enter") calculate();
+    else if (input === ".")  addDecimal();
+    else if (input === "Backspace") backSpace();
+    else if (input === "Escape") clearDisplay();
+});
